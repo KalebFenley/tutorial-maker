@@ -33,26 +33,20 @@ highlight_draw = ImageDraw.Draw(highlight_image)
 
 highlight_draw.ellipse(
     [(0, 0), (highlight_size, highlight_size)],
-    fill=(0,191,255,150),  # RGBA: vibrant yellow with 50% transparency
+    fill=(0, 191, 255, 150),  # RGBA: vibrant yellow with 50% transparency
 )
 
 
 def on_click(x, y, button, pressed):
-
     global screenshot_counter
-
     if pressed:
-
         # Take a screenshot
-
         screenshot = pyautogui.screenshot()
 
         # Create a temporary image with the same size as the screenshot
-
         temp_image = Image.new("RGBA", screenshot.size, (0, 0, 0, 0))
 
         # Paste the highlight image at the click position
-
         temp_image.paste(
             highlight_image,
             (x - highlight_size // 2, y - highlight_size // 2),
@@ -60,29 +54,22 @@ def on_click(x, y, button, pressed):
         )
 
         # Composite the temporary image onto the screenshot
-
         screenshot = Image.composite(temp_image, screenshot, temp_image)
 
         # Overlay the cursor image at the click position
-
         screenshot.paste(
             cursor_image, (x - cursor_size // 2, y - cursor_size // 2), cursor_image
         )
 
         # Create a unique filename
-
         filename = f"screenshot_{screenshot_counter:04d}.png"
-
         filepath = os.path.join(screenshot_dir, filename)
 
         # Save the screenshot
-
         screenshot.save(filepath)
 
         # Increment the counter
-
         screenshot_counter += 1
-
         print(f"Screenshot saved: {filepath}")
 
 
