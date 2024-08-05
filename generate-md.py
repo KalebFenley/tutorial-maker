@@ -1,6 +1,7 @@
 import os
-from PIL import Image
-import matplotlib.pyplot as plt
+from PIL import Image, ImageTk
+import tkinter as tk
+from tkinter import simpledialog
 
 # Directory containing screenshots
 screenshot_dir = 'screenshots'
@@ -22,22 +23,23 @@ with open(f'{file_title}.md', 'w') as file:
         img_path = os.path.join(screenshot_dir, screenshot_file)
         img = Image.open(img_path)
         
-        # Resize the image (e.g., reduce to 50% of the original size)
-        max_size = (800, 600)  # Example maximum size (width, height)
-        img.thumbnail(max_size)
+        # Create a new tkinter window
+        window = tk.Tk()
+        window.title("Screenshot")
         
-        # Display the resized image
-        plt.figure(figsize=(img.width / 100, img.height / 100), dpi=100)
-        plt.imshow(img)
-        plt.axis('off')  # Hide the axes
-        plt.show(block=False)  # Non-blocking call to show the image
-
-        # Prompt for description
-        description = input(f"Describe the action for screenshot {screenshot_file}: ")
+        # Convert the image to a format that can be used by tkinter
+        img_tk = ImageTk.PhotoImage(img)
         
-        # Close the image window
-        plt.close()
-
+        # Create a label to display the image
+        label = tk.Label(window, image=img_tk)
+        label.pack()
+        
+        # Create a dialog to prompt for the description
+        description = simpledialog.askstring("Description", "Describe the action for screenshot " + screenshot_file)
+        
+        # Close the window
+        window.destroy()
+        
         # Write the screenshot and description to the markdown file
         file.write(f'## {description}\n\n')
         file.write(f'![{description}]({img_path})\n\n')
